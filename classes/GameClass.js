@@ -1,4 +1,5 @@
 import { Player } from "./PlayerClass.js";
+import readline from 'readline';
 
 // create a class for the tic tac toe game
 class Game {
@@ -11,6 +12,7 @@ class Game {
 
     // create the board
     // row array, column array, populate with null to start
+    // WORKING
     createBoardTemplate() {
         const gameBoard = [];
         for (let row = 0; row < 3; row++) {
@@ -58,6 +60,20 @@ class Game {
         console.log('');
     };
 
+    // logic to start the game loop
+    startGame() {
+        let gameEnded = false;
+        while (gameEnded === false) {
+            this.printBoard();
+            let row = prompt(`Please input a row (0, 1, or 2):`);
+            let column = prompt(`Please input a column (0, 1, or 2):`);
+
+            console.log(row);
+            console.log(column);
+            break;
+        }
+    };
+
     // check who the active player is
     // select what element you want to make a move on
     // make the move as the active player
@@ -65,36 +81,43 @@ class Game {
     // update the gameboard
     // switch the player turn
     // return the updated gameboard
-    makeMove(activePlayer) {
-
-        if ((this.currentPlayerIndex + 1) % 2 !== 0) {
-            console.log(`It is Player One's turn!`)
-            // logic for player 1: X
-
-            // switch to player 2's turn
+    makeMove(row, column) {
+        if (this.isMoveValid(row, column)) {
+            this.updateBoard(row, column);
+            this.switchPlayerTurn();
+            this.printBoard();
         } else {
-            console.log(`It is Player Two's turn!`)
-            // logic for player 2: O
-            // switch to palyer 1's turn
+            console.log('This move is invalid, please try again.')
         }
-
-        // pass in the active player. what should they do?
-        // console.log(`It is ${activePlayer}'s turn!`)
-        const initalBoard = this.createBoardTemplate();
-        initalBoard.forEach((row) => {
-            row.forEach((column) => {
-                // this loops over every element in the tic tac toe board
-                console.log(column);
-                // if () {}
-            });
-        })
     };
 
     // check if the move is valid
-    isMoveValid() {};
+    // returns false if invalid
+    // returns true if the move is valid
+    isMoveValid(row, column) {
+        if (row < 0 || row > 2 || column < 0 || column > 2) {
+            // out of bounds return false
+            return false;
+        } else if (this.gameBoard[row][column] !== null) {
+            // not null return false
+            return false;
+        } else {
+            // return true
+            return true;
+        }
+    };
 
     // after player makes a move, switch to the other player's turn
-    switchPlayerTurn() {};
+    // WORKING
+    switchPlayerTurn() {
+        if (this.currentPlayerIndex === 0) {
+            this.currentPlayerIndex = 1;
+            return this.players[this.currentPlayerIndex];
+        } else {
+            this.currentPlayerIndex = 0;
+            return this.players[this.currentPlayerIndex];
+        }
+    };
 
     // create a new player
     // THIS CAN BE DONE DYNAMICALLY SOMEHOW WITH MONGOOSE
@@ -115,10 +138,15 @@ class Game {
 
 // const game1 = new Game('player1');
 const game1 = new Game();
-// console.log(game1);
-game1.updateBoard(0, 0);
-game1.updateBoard(2, 2);
-game1.printBoard();
+game1.startGame();
+// game1.rowColumnPrompt();
+// // console.log(game1);
+// game1.updateBoard(0, 0);
+// game1.updateBoard(2, 2);
+// game1.printBoard();
+// game1.switchPlayerTurn();
+// game1.switchPlayerTurn();
+// game1.switchPlayerTurn();
 // game1.makeMove();
 // game1.showPlayerData();
 // game1.createBoard();
