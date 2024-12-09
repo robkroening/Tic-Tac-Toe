@@ -1,5 +1,5 @@
 import { Player } from "./PlayerClass.js";
-import readline from 'readline';
+import inquirer from "inquirer";
 
 // create a class for the tic tac toe game
 class Game {
@@ -61,17 +61,50 @@ class Game {
     };
 
     // logic to start the game loop
-    startGame() {
-        let gameEnded = false;
-        while (gameEnded === false) {
+    async startGame() {
+        let isGameOver = false;
+    
+        while (!isGameOver) {
             this.printBoard();
-            let row = prompt(`Please input a row (0, 1, or 2):`);
-            let column = prompt(`Please input a column (0, 1, or 2):`);
-
-            console.log(row);
-            console.log(column);
-            break;
+    
+            // Prompt for row input
+            const { row } = await inquirer.prompt([{
+                type: 'input',
+                name: 'row',
+                message: 'Please input a row (0, 1, or 2):',
+                validate: (input) => ['0', '1', '2'].includes(input) || 'Please enter 0, 1, or 2',
+            }]);
+    
+            // Prompt for column input
+            const { column } = await inquirer.prompt([{
+                type: 'input',
+                name: 'column',
+                message: 'Please input a column (0, 1, or 2):',
+                validate: (input) => ['0', '1', '2'].includes(input) || 'Please enter 0, 1, or 2',
+            }]);
+    
+            const rowParsed = parseInt(row);
+            const columnParsed = parseInt(column);
+    
+            if (this.isMoveValid(rowParsed, columnParsed)) {
+                this.updateBoard(rowParsed, columnParsed);
+                // isGameOver = this.checkForWin();  // Check if the game is over
+                isGameOver = true;
+    
+                if (!isGameOver) {
+                    this.switchPlayerTurn();  // Switch player if the game is not over
+                } else {
+                    console.log("Game Over!");
+                }
+            } else {
+                console.log('Invalid move, try again.');
+            }
         }
+    }
+
+    // Logic for checking for win
+    checkForWin() {
+
     };
 
     // check who the active player is
@@ -139,6 +172,7 @@ class Game {
 // const game1 = new Game('player1');
 const game1 = new Game();
 game1.startGame();
+// game1.getRowInput();
 // game1.rowColumnPrompt();
 // // console.log(game1);
 // game1.updateBoard(0, 0);

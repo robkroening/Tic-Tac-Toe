@@ -5,6 +5,15 @@
     <title>TicTacToe</title>
 </head>
 <body>
-    <script src="./classes/GameClass.js"></script>
+    <form id="move-input">
+        <label for="row">Row:</label>
+        <input type="text" name="row" id="row-input">
+
+        <label for="column">Column:</label>
+        <input type="text" name="column" id="column-input">
+
+        <input type="submit" id="submit-move-button">
+    </form>
+    <script type="module" src="./classes/GameClass.js"></script>
 </body>
 </html>
