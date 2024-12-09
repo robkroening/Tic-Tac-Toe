@@ -12,7 +12,6 @@ class Game {
 
     // create the board
     // row array, column array, populate with null to start
-    // WORKING
     createBoardTemplate() {
         const gameBoard = [];
         for (let row = 0; row < 3; row++) {
@@ -71,7 +70,7 @@ class Game {
             const { row } = await inquirer.prompt([{
                 type: 'input',
                 name: 'row',
-                message: 'Please input a row (0, 1, or 2):',
+                message: 'Please input a row (0: top, 1: middle, or 2: bottom):',
                 validate: (input) => ['0', '1', '2'].includes(input) || 'Please enter 0, 1, or 2',
             }]);
     
@@ -79,7 +78,7 @@ class Game {
             const { column } = await inquirer.prompt([{
                 type: 'input',
                 name: 'column',
-                message: 'Please input a column (0, 1, or 2):',
+                message: 'Please input a column (0: left, 1: middle, or 2: right):',
                 validate: (input) => ['0', '1', '2'].includes(input) || 'Please enter 0, 1, or 2',
             }]);
     
@@ -88,8 +87,8 @@ class Game {
     
             if (this.isMoveValid(rowParsed, columnParsed)) {
                 this.updateBoard(rowParsed, columnParsed);
-                // isGameOver = this.checkForWin();  // Check if the game is over
-                isGameOver = true;
+                isGameOver = this.checkForWin();  // Check if the game is over
+                // isGameOver = true;
     
                 if (!isGameOver) {
                     this.switchPlayerTurn();  // Switch player if the game is not over
@@ -104,7 +103,46 @@ class Game {
 
     // Logic for checking for win
     checkForWin() {
+        // check if there is 3 in a row in each direction
+        // 3 in a row horizontal
+        for (let row = 0; row < 3; row++) {
+            if (this.gameBoard[row][0] && this.gameBoard[row][0] === this.gameBoard[row][1] && this.gameBoard[row][0] === this.gameBoard[row][2]) {
+                console.log(`Player ${this.players[this.currentPlayerIndex]} wins!`);
+                return true;
+            }
+        }
+        // 3 in a row vertical
+        for (let column = 0; column < 3; column++) {
+            if (this.gameBoard[column][0] && this.gameBoard[column][0] === this.gameBoard[column][1] && this.gameBoard[column][0] === this.gameBoard[column][2]) {
+                console.log(`Player ${this.players[this.currentPlayerIndex]} wins!`);
+                return true;
+            }
+        }
+        // 3 in a row diagonal
+        // bottom left to top right
+        if (this.gameBoard[2][0] &&
+            this.gameBoard[2][0] === this.gameBoard[1][1] &&
+            this.gameBoard[2][0] === this.gameBoard[0][2]
+        ) {
+            console.log(`Player ${this.gameBoard[2][0]} wins!`);
+            return true;
+        }
+        // bottom right to top left
+        if (this.gameBoard[2][2] &&
+            this.gameBoard[2][2] === this.gameBoard[1][1] &&
+            this.gameBoard[2][2] === this.gameBoard[0][0]
+        ) {
+            console.log(`Player ${this.gameBoard[2][2]} wins!`);
+            return true;
+        }
 
+        // check for a draw
+        if (this.gameBoard.every(row => row.every(cell => cell !== null))) {
+            console.log('It\'s a draw!');
+            return true;
+        }
+
+        return false;
     };
 
     // check who the active player is
@@ -168,21 +206,5 @@ class Game {
 
     // more methods below
 };
-
-// const game1 = new Game('player1');
-const game1 = new Game();
-game1.startGame();
-// game1.getRowInput();
-// game1.rowColumnPrompt();
-// // console.log(game1);
-// game1.updateBoard(0, 0);
-// game1.updateBoard(2, 2);
-// game1.printBoard();
-// game1.switchPlayerTurn();
-// game1.switchPlayerTurn();
-// game1.switchPlayerTurn();
-// game1.makeMove();
-// game1.showPlayerData();
-// game1.createBoard();
 
 export default Game;
